@@ -5,7 +5,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "stock")
-public class Stock {
+public class StockRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -16,7 +16,12 @@ public class Stock {
     @JoinColumn(name = "socks_id")
     private Socks socks;
 
-    public Stock() {}
+    public StockRecord() {}
+
+    public StockRecord(int quantity, Socks socks) {
+        this.quantity = quantity;
+        this.socks = socks;
+    }
 
     public int getId() {
         return id;
@@ -55,7 +60,7 @@ public class Stock {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Stock stock = (Stock) o;
+        StockRecord stock = (StockRecord) o;
         return id == stock.id &&
                 quantity == stock.quantity &&
                 Objects.equals(socks, stock.socks);

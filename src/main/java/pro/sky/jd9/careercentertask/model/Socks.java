@@ -17,6 +17,11 @@ public class Socks {
 
     public Socks() {}
 
+    public Socks(String color, int cottonPart) {
+        this.color = color;
+        this.cottonPart = cottonPart;
+    }
+
     public int getId() {
         return id;
     }
