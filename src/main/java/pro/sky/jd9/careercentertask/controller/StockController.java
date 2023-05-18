@@ -42,7 +42,6 @@ public class StockController {
     @ExceptionHandler(StockException.class)
     ResponseEntity handleStockException(StockException exception) {
         logger.error(exception.getMessage());
-        // возврат статуса http
-
+        return ResponseEntity.status(exception.getClass().getAnnotation(ResponseStatus.class).value()).build();
     }
 }

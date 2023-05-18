@@ -1,0 +1,2 @@
+-- liquibase formatted sql
+-- changeset stanislav:1
