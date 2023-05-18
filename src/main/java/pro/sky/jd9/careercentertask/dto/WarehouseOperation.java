@@ -1,5 +1,8 @@
 package pro.sky.jd9.careercentertask.dto;
 
+/**
+ * DTO created from HTTP-request's RequestBody
+ */
 public class WarehouseOperation {
     private String color;
     private int cottonPart;
