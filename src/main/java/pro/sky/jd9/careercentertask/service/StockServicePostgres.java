@@ -109,13 +109,13 @@ public class StockServicePostgres implements StockService {
         try {
             switch (operation) {
                 case EQUAL:
-                    result = socksRepository.getRemainderByFilterIsEqual(color, conditionValue);
+                    result = socksRepository.getRemainderByFilterIsEqual(color, conditionValue).orElse(0);
                     break;
                 case MORE_THAN:
-                    result = socksRepository.getRemainderByFilterIsMoreThan(color, conditionValue);
+                    result = socksRepository.getRemainderByFilterIsMoreThan(color, conditionValue).orElse(0);
                     break;
                 case LESS_THAN:
-                    result = socksRepository.getRemainderByFilterIsLessThan(color, conditionValue);
+                    result = socksRepository.getRemainderByFilterIsLessThan(color, conditionValue).orElse(0);
                     break;
                 default:
                     throw new InvalidParameter("operation");

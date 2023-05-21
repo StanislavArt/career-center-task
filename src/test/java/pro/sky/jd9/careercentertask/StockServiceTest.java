@@ -2,6 +2,7 @@ package pro.sky.jd9.careercentertask;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pro.sky.jd9.careercentertask.dto.WarehouseOperation;
 import pro.sky.jd9.careercentertask.exceptions.InvalidParameter;
@@ -12,15 +13,19 @@ import pro.sky.jd9.careercentertask.repository.StockRepository;
 import pro.sky.jd9.careercentertask.service.StockService;
 import pro.sky.jd9.careercentertask.service.StockServicePostgres;
 
+import javax.annotation.PostConstruct;
+
 @SpringBootTest
 public class StockServiceTest {
-    private final StockService stockService;
-    private final SocksRepository socksRepository;
-    private final StockRepository stockRepository;
+    private StockService stockService;
 
-    public StockServiceTest(SocksRepository socksRepository, StockRepository stockRepository) {
-        this.socksRepository = socksRepository;
-        this.stockRepository = stockRepository;
+    @Autowired
+    private SocksRepository socksRepository;
+    @Autowired
+    private StockRepository stockRepository;
+
+    @PostConstruct
+    public void init() {
         stockService = new StockServicePostgres(socksRepository, stockRepository);
     }
 
@@ -44,7 +49,7 @@ public class StockServiceTest {
         socks = socksRepository.findSocksByColorAndCottonPart(color, cottonPart).orElse(null);
         Assertions.assertNotNull(socks);
 
-        quantityActual = socksRepository.getRemainderByFilterIsEqual(color, cottonPart);
+        quantityActual = socksRepository.getRemainderByFilterIsEqual(color, cottonPart).orElse(0);
         Assertions.assertEquals(quantity, quantityActual);
     }
 
@@ -68,7 +73,7 @@ public class StockServiceTest {
         quantityActual = stockService.socksOutcome(warehouseOperation);
         Assertions.assertEquals(sold, quantityActual);
 
-        quantityActual = socksRepository.getRemainderByFilterIsEqual(color, cottonPart);
+        quantityActual = socksRepository.getRemainderByFilterIsEqual(color, cottonPart).orElse(0);
         Assertions.assertEquals(quantityExpected, quantityActual);
     }
 

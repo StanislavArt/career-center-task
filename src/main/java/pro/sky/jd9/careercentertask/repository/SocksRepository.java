@@ -16,17 +16,17 @@ public interface SocksRepository extends JpaRepository<Socks, Integer> {
     @Query(value = "select sum(stock.quantity) from socks inner join stock " +
             "on socks.id = stock.socks_id " +
             "where socks.color = :color and socks.cotton_part > :cottonPart", nativeQuery = true)
-    Integer getRemainderByFilterIsMoreThan(@Param("color") String color, @Param("cottonPart") int cottonPart);
+    Optional<Integer> getRemainderByFilterIsMoreThan(@Param("color") String color, @Param("cottonPart") int cottonPart);
 
     @Query(value = "select sum(stock.quantity) from socks inner join stock " +
             "on socks.id = stock.socks_id " +
             "where socks.color = :color and socks.cotton_part < :cottonPart", nativeQuery = true)
-    Integer getRemainderByFilterIsLessThan(@Param("color") String color, @Param("cottonPart") int cottonPart);
+    Optional<Integer> getRemainderByFilterIsLessThan(@Param("color") String color, @Param("cottonPart") int cottonPart);
 
     @Query(value = "select sum(stock.quantity) from socks inner join stock " +
             "on socks.id = stock.socks_id " +
             "where socks.color = :color and socks.cotton_part = :cottonPart", nativeQuery = true)
-    Integer getRemainderByFilterIsEqual(@Param("color") String color, @Param("cottonPart") int cottonPart);
+    Optional<Integer> getRemainderByFilterIsEqual(@Param("color") String color, @Param("cottonPart") int cottonPart);
 
     Optional<Socks> findSocksByColorAndCottonPart(String color, Integer cottonPart);
 

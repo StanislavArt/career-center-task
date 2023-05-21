@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -18,6 +19,7 @@ import pro.sky.jd9.careercentertask.model.StockRecord;
 import pro.sky.jd9.careercentertask.repository.SocksRepository;
 import pro.sky.jd9.careercentertask.repository.StockRepository;
 import pro.sky.jd9.careercentertask.service.StockService;
+import pro.sky.jd9.careercentertask.service.StockServicePostgres;
 
 import java.util.Optional;
 
@@ -35,10 +37,11 @@ public class StockControllerTest {
     @MockBean
     private StockRepository stockRepository;
 
-    @InjectMocks
-    private StockService stockService;
+    @SpyBean
+    private StockServicePostgres stockService;
 
-    private final StockController stockController = new StockController(stockService);
+    @InjectMocks
+    private StockController stockController;
 
     @Test
     public void getRemainderTest() throws Exception {
@@ -47,14 +50,13 @@ public class StockControllerTest {
         int remainder = 15;
 
 
-        Mockito.when(socksRepository.getRemainderByFilterIsEqual(color, cottonPart)).thenReturn(remainder);
+        Mockito.when(socksRepository.getRemainderByFilterIsEqual(color, cottonPart)).thenReturn(Optional.of(remainder));
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("api/socks?color=" + color + "&operation=equal&cottonPart=" + cottonPart)
+                        .get("/api/socks?color=" + color + "&operation=equal&cottonPart=" + cottonPart)
                         .accept(MediaType.TEXT_PLAIN))
                         .andExpect(status().isOk())
                         .andExpect(content().string(String.valueOf(remainder)));
-
     }
 
     @Test
@@ -84,13 +86,13 @@ public class StockControllerTest {
         Mockito.when(stockRepository.save(stockRecord)).thenReturn(stockRecord);
 
         mockMvc.perform(MockMvcRequestBuilders
-                .post("api/socks/income")
+                .post("/api/socks/income")
                 .content(objectMapper.writeValueAsString(warehouseOperation))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         mockMvc.perform(MockMvcRequestBuilders
-                .post("api/socks/outcome")
+                .post("/api/socks/outcome")
                 .content(objectMapper.writeValueAsString(warehouseOperation))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
