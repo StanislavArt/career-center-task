@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  postgres:
+    build:
+      context: services/postgres
+      dockerfile: Dockerfile
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: "socks_stock"
+      POSTGRES_USER: "stockman"
+      POSTGRES_PASSWORD: "pass777"
+      POSTGRES_INITDB_ARGS: "--auth-host=md5 --auth-local=md5"
+    volumes:
+      - "db-data-sql:/var/lib/postgresql/data"
+
+  app:
+    build:
+      context: services/app
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/socks_stock
+    image: 'socks-stock-application'
+    ports:
+      - "80:8080"
+    depends_on:
+      - postgres
+
+volumes:
+  db-data-sql:
